@@ -1,0 +1,49 @@
+﻿@page "/conferences/{mode}"
+@page "/conferences/{mode}/{id:guid}"
+
+<ConferenceHeader Mode="@Mode"></ConferenceHeader>
+
+
+@if (_conferenceDetails != null)
+{
+    <EditForm class="d-flex flex-column" style="gap: 20px;" Model="_conferenceDetails" OnValidSubmit="SaveConference">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <FluentValidationValidator />
+        <ValidationSummary></ValidationSummary>
+        <div class="form-group">
+            <MudInput Class="full-width" Label="Title" Disabled="@_isShow" @bind-Value="_conferenceDetails.Title" Placeholder="Title of the conference"></MudInput>
+        </div>
+        <div class="form-group">
+            <MudInput Class="full-width" Label="City" Disabled="@_isShow" @bind-Value="_conferenceDetails.City" Placeholder="City of the conference"></MudInput>
+        </div>
+        <div class="form-group">
+            @if (Mode == ConferenceDetailsMode.Show)
+            {
+                <MudInput Class="full-width" Label="Country" Disabled="@_isShow" @bind-Value="_conferenceDetails.Country" Placeholder="Country of the conference"></MudInput>
+            }
+            else if (_countries != null)
+            {
+                <MudSelect @bind-Value="_conferenceDetails.Country" Label="Country">
+                    @foreach(var country in _countries)
+                    {
+                        <MudSelectItem Value="@country">@country</MudSelectItem>
+                    }
+                </MudSelect>
+                @*<MudAutocomplete T="string" Label="Country" @bind-Value="_conferenceDetails.Country" SearchFunc="@SearchCountry" />*@
+            }
+        </div>
+        <div class="form-group">
+            <MudDatePicker Disabled="@_isShow" @bind-Date="_conferenceDetails.DateFrom" Placeholder="Begin"></MudDatePicker>
+        </div>
+        <div class="form-group">
+            <MudDatePicker Disabled="@_isShow" @bind-Date="_conferenceDetails.DateTo" Placeholder="End"></MudDatePicker>
+        </div>
+        <div class="d-flex justify-end form-actions">
+            @if (Mode != ConferenceDetailsMode.Show)
+            {
+                <MudButton Variant="Variant.Outlined" OnClick="Cancel">Cancel</MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary">Speichern</MudButton>
+            }
+        </div>
+    </EditForm>
+}

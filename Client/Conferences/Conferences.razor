@@ -1,0 +1,43 @@
+﻿@page "/conferences"
+@attribute [Authorize]
+
+@if (_conferences == null)
+{
+    <p>Fetching conferences found</p>
+}
+else
+{
+    <MudBreakpointProvider>
+        <MudHidden Breakpoint="Breakpoint.Lg">
+            <MudFab Class="btn-action" Size="Size.Medium" Icon="@Icons.Material.Filled.Add" Color="Color.Secondary" OnClick="AddConference">Add Conference</MudFab>
+        </MudHidden>
+
+        <table class="full-width">
+            <colgroup>
+                <col />
+                <col width="200px;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th style="text-align: left">Title</th>
+                    <th style="text-align: right">
+                        <MudHidden Breakpoint="Breakpoint.Lg" Invert>
+                            <MudButton Color="Color.Secondary" OnClick="AddConference">Add conference</MudButton>
+                        </MudHidden>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <Virtualize Items="@_conferences" Context="conf">
+                    <tr style="@(_newId == conf.ID ? "background: green; color: white" : "")" @key="conf.ID">
+                        <td>@conf.Title</td>
+                        <td style="text-align: right">
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => OpenDetails(ConferenceDetailsMode.Edit, conf.ID)"></MudIconButton>
+                            <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye" OnClick="() => OpenDetails(ConferenceDetailsMode.Show, conf.ID)"></MudIconButton>
+                        </td>
+                    </tr>
+                </Virtualize>
+            </tbody>
+        </table>
+    </MudBreakpointProvider>
+}
